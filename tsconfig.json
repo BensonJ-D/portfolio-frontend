@@ -2,6 +2,9 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "baseUrl": "src/",
+        "lib": ["es6", "dom"],
+        "noImplicitThis": true,
+        "strictNullChecks": true,
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "commonjs",
@@ -11,6 +14,7 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
+        "strict": true,
         "types": [
             "node",
             "mocha"

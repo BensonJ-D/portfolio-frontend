@@ -1,53 +1,16 @@
 import React from 'react';
-import { CssBaseline } from '@mui/material';
-import {
-  Link, Route, Router, Switch
-} from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import About from '../components/about/About';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import Theme from '../themes';
 
-const history = createBrowserHistory();
-
-function Home() {
+const App = () => {
+  // const [light, setLight] = React.useState(true);
   return (
-      <div>
-        <h2>Home</h2>
-      </div>
+      <ThemeProvider theme={Theme.Default}>
+          <CssBaseline />
+          <About />
+      </ThemeProvider>
   );
-}
-
-function About() {
-  return (
-      <div>
-        <h2>About</h2>
-      </div>
-  );
-}
-
-function App() {
-  return (
-    <Router history={history}>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-        </ul>
-
-        <CssBaseline />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
-}
+};
 
 export default App;
