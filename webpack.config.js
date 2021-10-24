@@ -9,11 +9,6 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx']
-    // fallback: {
-    //     "child_process": false,
-    //     "fs": false,
-    //     // and also other packages that are not found
-    // }
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -42,6 +37,11 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: ['ts-loader']
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   }

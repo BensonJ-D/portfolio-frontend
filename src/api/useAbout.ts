@@ -24,7 +24,7 @@ const defaultAboutDetails: AboutDetails = {
 };
 
 const useAbout = (): AboutResult => {
-  const client = axios.create({ baseURL: 'http://backend.test/api/portfolio' });
+  const client = axios.create({ baseURL: 'http://localhost:4000/api/portfolio' });
 
   const [details, setDetails] = useState<AboutDetails>(defaultAboutDetails);
   const [loading, setLoading] = useState<boolean>(false);

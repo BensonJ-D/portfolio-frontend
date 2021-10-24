@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, styled } from '@mui/material';
 import useAbout from '../../api/useAbout';
+import TextEditor from '../text-editor/TextEditor';
 
 const AboutContainer = styled('div')(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -71,13 +72,15 @@ export default function About() {
             <LineBreak />Here&apos;s some random content.
           </AboutHeader>
           <AboutSubheader>
-            <div>
+            <span>
               { details.content }
-            </div>
-            <div>
+            </span>
+            <span>
               Last updated: { details.timestamp.fromNow() }
-            </div>
+            </span>
           </AboutSubheader>
+
+        <TextEditor />
           <CenterJustifiedFlexBox>
             <Button color='secondary'>
               Work with me
