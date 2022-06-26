@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, styled } from '@mui/material';
-import useAbout from '../../api/useAbout';
+import usePortfolioApi from '../../api/usePortfolioApi';
 import TextEditor from '../text-editor/TextEditor';
 
 const AboutContainer = styled('div')(({ theme }) => ({
@@ -61,7 +61,7 @@ const Image = styled('img')(({ theme }) => ({
 
 export default function About() {
   // const theme = useTheme();
-  const { details } = useAbout();
+  const { details } = usePortfolioApi();
 
   return (
     <section>
@@ -76,7 +76,7 @@ export default function About() {
               { details.content }
             </span>
             <span>
-              Last updated: { details.timestamp.fromNow() }
+              Last updated: { details.timestamp.diffNow().toHuman() }
             </span>
           </AboutSubheader>
 

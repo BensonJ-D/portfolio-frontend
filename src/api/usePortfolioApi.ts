@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import moment, { Moment } from 'moment';
+import { DateTime } from 'luxon';
 
 type AboutResponse = {
   content: string,
@@ -9,7 +9,7 @@ type AboutResponse = {
 
 type AboutDetails = {
   content: string,
-  timestamp: Moment
+  timestamp: DateTime
 };
 
 type AboutResult = {
@@ -20,11 +20,11 @@ type AboutResult = {
 
 const defaultAboutDetails: AboutDetails = {
   content: '',
-  timestamp: moment()
+  timestamp: DateTime.now()
 };
 
-const useAbout = (): AboutResult => {
-  const client = axios.create({ baseURL: 'http://localhost:4000/api/portfolio' });
+const usePortfolioApi = (): AboutResult => {
+  const client = axios.create({ baseURL: 'http://backend.local' });
 
   const [details, setDetails] = useState<AboutDetails>(defaultAboutDetails);
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,8 +38,8 @@ const useAbout = (): AboutResult => {
         const { content, timestamp } = data as AboutResponse;
 
         setDetails({
-          content: content,
-          timestamp: moment(timestamp)
+          content,
+          timestamp: DateTime.fromISO(timestamp)
         });
       })
       .catch(e => setError(e))
@@ -49,4 +49,4 @@ const useAbout = (): AboutResult => {
   return { details, loading, error };
 };
 
-export default useAbout;
+export default usePortfolioApi;
