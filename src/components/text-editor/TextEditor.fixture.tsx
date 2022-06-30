@@ -1,4 +1,4 @@
 import React from 'react';
-import TextEditor from './TextEditor';
+import { TextEditor } from './TextEditor';
 
 export default <TextEditor />;

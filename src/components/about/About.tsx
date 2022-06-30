@@ -1,7 +1,10 @@
 import React from 'react';
 import { Button, styled } from '@mui/material';
 import usePortfolioApi from '../../api/usePortfolioApi';
-import TextEditor from '../text-editor/TextEditor';
+import { TextEditor } from '../text-editor/TextEditor';
+
+import { summarisedTimeElapsed } from '../../utils/DateTimeUtils';
+import MuiMarkdown from 'mui-markdown';
 
 const AboutContainer = styled('div')(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -62,7 +65,6 @@ const Image = styled('img')(({ theme }) => ({
 export default function About() {
   // const theme = useTheme();
   const { details } = usePortfolioApi();
-
   return (
     <section>
       <AboutContainer>
@@ -72,12 +74,12 @@ export default function About() {
             <LineBreak />Here&apos;s some random content.
           </AboutHeader>
           <AboutSubheader>
-            <span>
-              { details.content }
-            </span>
-            <span>
-              Last updated: { details.timestamp.diffNow().toHuman() }
-            </span>
+            <div>
+              <MuiMarkdown>{ details.content }</MuiMarkdown>
+            </div>
+            <div>
+              Last updated: { summarisedTimeElapsed(details.timestamp) }
+            </div>
           </AboutSubheader>
 
         <TextEditor />
