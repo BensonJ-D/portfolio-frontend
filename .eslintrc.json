@@ -30,8 +30,10 @@
         "semi": [1, "always"],
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
-        "space-before-function-paren": ["error", "never"]
+        "space-before-function-paren": ["error", "never"],
+        "indent": ["error", 2, { "SwitchCase": 1 }]
     },
+    "ignorePatterns": ["*.css"],
     "overrides": [
         {
             "files": [
@@ -42,5 +44,9 @@
                 "jest": true
             }
         }
-    ]
+    ],
+    "globals": {
+        "JSX": true,
+        "React": true
+    }
 }

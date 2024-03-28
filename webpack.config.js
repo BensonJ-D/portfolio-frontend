@@ -12,6 +12,7 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
+    https: true,
     historyApiFallback: true,
     allowedHosts: 'all',
     host: '0.0.0.0',
@@ -40,7 +41,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: ['style-loader', 'css-loader']
       }
     ]

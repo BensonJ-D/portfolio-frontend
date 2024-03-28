@@ -1,52 +1,59 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import axios, { AxiosInstance } from 'axios';
 import { DateTime } from 'luxon';
+import { AboutContent, AboutResponse, defaultAboutDetails } from './response/About';
+import { useQuery, UseQueryResult } from 'react-query';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
 
-type AboutResponse = {
-  content: string,
-  timestamp: string
+const getAbout = (axiosClient: AxiosInstance): UseQueryResult<AboutContent> => {
+  const queryKey = 'about';
+  const queryFn = axiosClient.get('/about')
+    .then(result => {
+      const { data } = result;
+      const { content, timestamp } = data as AboutResponse;
+
+      return { content, timestamp: DateTime.fromISO(timestamp) } as AboutContent;
+    });
+
+  return useQuery(queryKey, () => queryFn);
 };
 
-type AboutDetails = {
-  content: string,
-  timestamp: DateTime
+const getContent = (page: string, axiosClient: AxiosInstance, token: String): UseQueryResult<AboutContent> => {
+  const queryKey = `/pages/get-content/${page}`;
+  const queryFn = axiosClient
+    .get(`/pages/get-content/${page}`,
+      { headers: { Authorization: `Bearer ${token}` } })
+    .then(result => {
+      const { data } = result;
+      const { content, timestamp } = data as AboutResponse;
+
+      return { content, timestamp: DateTime.fromISO(timestamp) } as AboutContent;
+    });
+
+  return useQuery(queryKey, () => queryFn);
 };
 
-type AboutResult = {
-  details: AboutDetails,
-  loading: boolean,
-  error: string | undefined
-}
-
-const defaultAboutDetails: AboutDetails = {
-  content: '',
-  timestamp: DateTime.now()
-};
-
-const usePortfolioApi = (): AboutResult => {
-  const client = axios.create({ baseURL: 'http://backend.local' });
-
-  const [details, setDetails] = useState<AboutDetails>(defaultAboutDetails);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>(undefined);
+const usePortfolioApi = () => {
+  const { getAccessTokenSilently } = useAuth0();
+  const [token, setToken] = useState('');
+  const axiosClient = axios.create({ baseURL: 'https://backend.local' });
 
   useEffect(() => {
-    setLoading(true);
-    client.get('/about')
-      .then(result => {
-        const { data } = result;
-        const { content, timestamp } = data as AboutResponse;
+    (async() => {
+      const token = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: 'https://backend.local',
+          scope: 'read:content'
+        }
+      });
+      setToken(token);
+    })();
+  }, [getAccessTokenSilently]);
 
-        setDetails({
-          content,
-          timestamp: DateTime.fromISO(timestamp)
-        });
-      })
-      .catch(e => setError(e))
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { details, loading, error };
+  return {
+    getAboutContent: () => getAbout(axiosClient),
+    getPageContent: (page: string) => getContent(page, axiosClient, token)
+  };
 };
 
 export default usePortfolioApi;

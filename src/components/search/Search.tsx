@@ -6,14 +6,14 @@ import StyledInputBase from './styles/StyledInputBase.style';
 
 export default function Search() {
   return (
-        <SearchStyle>
-            <SearchIconWrapper>
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-            />
-        </SearchStyle>
+    <SearchStyle>
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <StyledInputBase
+        placeholder="Search…"
+        inputProps={{ 'aria-label': 'search' }}
+      />
+    </SearchStyle>
   );
 }
