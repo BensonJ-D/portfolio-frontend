@@ -9,8 +9,6 @@ export const Auth0Provider: React.FC<PropsWithChildren> = ({ children }) => {
   const clientId = '1Wwrx91RgTdIsT4RgY5D2AMGe87LvDjx';
 
   const redirectUri = 'https://frontend.local/callback';
-  const audience = 'https://dev-jdb.au.auth0.com/api/v2/';
-  const scope = 'read:content';
 
   const onRedirectCallback = (appState?: AppState) => {
     navigate(appState?.returnTo || window.location.pathname);
@@ -25,9 +23,7 @@ export const Auth0Provider: React.FC<PropsWithChildren> = ({ children }) => {
       domain={domain}
       clientId={clientId}
       authorizationParams={{
-        redirect_uri: redirectUri,
-        audience,
-        scope
+        redirect_uri: redirectUri
       }}
       onRedirectCallback={onRedirectCallback}
     >

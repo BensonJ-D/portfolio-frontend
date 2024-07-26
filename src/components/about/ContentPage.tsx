@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
 import { Backdrop, CircularProgress, styled, useTheme } from '@mui/material';
-import usePortfolioApi from '../../api/usePortfolioApi';
+import React, { useEffect, useState } from 'react';
 
 import { ReactTextEditorContext } from '../text-editor/TextEditorContext';
 import './MarkdownStyles.css';
-import { WebSocketContext } from '../../utils/websockets/WebSocketProvider';
-import { WebSocketListener } from '../../utils/websockets/types/WebSocketListener';
 
-import { useLocation, useParams } from 'react-router-dom';
-import { defaultAboutDetails } from '../../api/response/About';
-import ReactMarkdown from 'react-markdown';
-import ContentLastUpdatedTag from './components/ContentLastUpdatedTag';
-import { TextEditor } from '../text-editor/TextEditor';
-import remarkGfm from 'remark-gfm';
 import { useAuth0 } from '@auth0/auth0-react';
+import useAxios from '../../api/useAxios';
+import { DateTime } from 'luxon';
+import ReactMarkdown from 'react-markdown';
+import { UseQueryResult, useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
+import remarkGfm from 'remark-gfm';
+import { AboutContent, AboutResponse, defaultAboutDetails } from '../../api/response/About';
+import { TextEditor } from '../text-editor/TextEditor';
+import ContentLastUpdatedTag from './components/ContentLastUpdatedTag';
 
 const AboutContainer = styled('div')(({ theme }) => ({
   width: '50%',
@@ -58,12 +58,50 @@ const MarkdownParagraph = styled('p')`
   }
 `;
 
+type QueryRequest = {
+  queryKey: string, 
+  queryFn: Promise<AboutContent>
+}
+
 export default function ContentPage() {
-  const { addListener, removeListener } = useContext(WebSocketContext);
   const { page } = useParams();
+  console.log('Page', page);
   if (!page) return null;
 
-  const { isAuthenticated, user } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
+  const { axiosClient } = useAxios();
+  const [content, setContent] = useState<AboutContent>()
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    (async() => {
+      try {
+        setIsLoading(true)
+        const token = await getAccessTokenSilently({
+          authorizationParams: {
+            audience: 'https://backend.local',
+            scope: 'read:content'
+          }
+        });
+        console.log(token)
+        const response = await axiosClient
+          .get(`/pages/get-content/${page}`,
+            { headers: { Authorization: `Bearer ${token}` } })
+          .then(result => {
+            const { data } = result;
+            const { content, timestamp } = data as AboutResponse;
+    
+            return { content, timestamp: DateTime.fromISO(timestamp) } as AboutContent;
+          });
+        setContent(response);
+        setIsLoading(false)
+      } catch (e) {
+        // Handle errors such as `login_required` and `consent_required` by re-prompting for a login
+        console.error(e);
+      }
+    })();
+  }, [getAccessTokenSilently, isAuthenticated]);
+
 
   const markdownOptions = {
     overrides: {
@@ -71,19 +109,7 @@ export default function ContentPage() {
     }
   };
 
-  useEffect(() => {
-    const listener = new WebSocketListener('Test', () => { console.log('Test 2'); });
-    addListener(listener);
-    return () => removeListener(listener);
-  }, []);
-
   const theme = useTheme();
-  const { getPageContent } = usePortfolioApi();
-  const pageContent = getPageContent(page);
-
-  if (!pageContent) return null;
-
-  const { isLoading, error, data } = pageContent;
 
   const [text, setText] = useState<string>('');
   const textProviderState = {
@@ -91,12 +117,14 @@ export default function ContentPage() {
     setValue: setText
   };
 
-  const about = data || defaultAboutDetails;
+  if (!content || isLoading) return null
+  const about = content || defaultAboutDetails;
   // setDetails(data || defaultAboutDetails);
   console.log('User', user);
 
   return (
-    <ReactTextEditorContext.Provider value={textProviderState}>
+    <div>
+    {/* // <ReactTextEditorContext.Provider value={textProviderState}> */}
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isLoading}
@@ -110,9 +138,10 @@ export default function ContentPage() {
         <AboutBody>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{about.content}</ReactMarkdown>
           <ContentLastUpdatedTag timestamp={ about.timestamp } />
-          <TextEditor />
+          {/* <TextEditor /> */}
         </AboutBody>
       </AboutContainer>
-    </ReactTextEditorContext.Provider>
+    {/* </ReactTextEditorContext.Provider> */}
+    </div>
   );
 }

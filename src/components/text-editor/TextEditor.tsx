@@ -20,6 +20,7 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 
 export const TextEditor = () => {
   const { setValue } = useTextEditorContext();
@@ -49,6 +50,7 @@ export const TextEditor = () => {
         <RichTextPlugin
           contentEditable={<ContentEditable className={ContentEditableStyle}/>}
           placeholder={<EditorPlaceholder>Enter some text...</EditorPlaceholder>}
+          ErrorBoundary={LexicalErrorBoundary}
         />
         <OnChangePlugin onChange={onChange} />
         <HistoryPlugin />

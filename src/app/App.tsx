@@ -14,11 +14,11 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Auth0Provider>
-          <WebSocketProvider>
+          {/* <WebSocketProvider> */}
             <ThemeProvider theme={Theme.Light}>
               <Content />
             </ThemeProvider>
-          </WebSocketProvider>
+          {/* </WebSocketProvider> */}
         </Auth0Provider>
       </BrowserRouter>
     </QueryClientProvider>

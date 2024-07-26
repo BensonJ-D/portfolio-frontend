@@ -79,19 +79,19 @@ export default function AboutPage() {
   };
 
   const about = data || defaultAboutDetails;
-  const source = new EventSource('https://backend.local/sse');
+  // const source = new EventSource('https://backend.local/sse');
 
-  function logEvent(text: string) {
-    console.log(text);
-  }
+  // function logEvent(text: string) {
+  //   console.log(text);
+  // }
 
-  source.addEventListener('message', function(e) {
-    logEvent('message:' + e.data);
-  }, false);
+  // source.addEventListener('message', function(e) {
+  //   logEvent('message:' + e.data);
+  // }, false);
 
-  source.addEventListener('open', function(e) {
-    logEvent('open');
-  }, false);
+  // source.addEventListener('open', function(e) {
+  //   logEvent('open');
+  // }, false);
   // setDetails(data || defaultAboutDetails);
 
   return (

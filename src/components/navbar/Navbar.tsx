@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Button, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './authentication/LoginButton';
+import LogoutButton from './authentication/LogoutButton';
 
 const AppBarContent = styled('div')(({ theme }) => {
   return {
@@ -30,6 +32,8 @@ const RightSideAligned = styled('div')(({ theme }) => {
 });
 
 export default function Navbar() {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const Profile = isAuthenticated ? LogoutButton : LoginButton
   const navigate = useNavigate();
 
   const handleAboutClick = () => {
@@ -49,7 +53,7 @@ export default function Navbar() {
         <Button size="medium">{'Contact Us'}</Button>
       </LeftSideAligned>
       <RightSideAligned>
-        <LoginButton />
+        <Profile />
       </RightSideAligned>
     </AppBarContent>
   );

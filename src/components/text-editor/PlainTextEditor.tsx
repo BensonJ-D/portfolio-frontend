@@ -15,6 +15,7 @@ import {
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { useTextEditorContext } from './TextEditorContext';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 
 const ControlledInputPlugin = ({ value }: {value: string}) => {
   const [editor] = useLexicalComposerContext();
@@ -44,6 +45,7 @@ export const PlainTextEditor = () => {
         <PlainTextPlugin
           contentEditable={<ContentEditable className={ContentEditableStyle}/>}
           placeholder={<EditorPlaceholder>Enter some text...</EditorPlaceholder>}
+          ErrorBoundary={LexicalErrorBoundary}
         />
         <HistoryPlugin />
         <TreeViewPlugin />
