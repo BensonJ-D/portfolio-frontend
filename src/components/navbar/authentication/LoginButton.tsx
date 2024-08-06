@@ -4,8 +4,9 @@ import { Button } from '@mui/material';
 
 const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
+  const redirect = window.location.pathname;
 
-  return <Button onClick={() => loginWithRedirect()}>Log In</Button>;
+  return <Button onClick={() => loginWithRedirect({ appState: { returnTo: redirect } })}>Log In</Button>;
 };
 
 export default LoginButton;

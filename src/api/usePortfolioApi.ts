@@ -1,58 +1,73 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import { DateTime } from 'luxon';
-import { AboutContent, AboutResponse, defaultAboutDetails } from './response/About';
-import { useQuery, UseQueryResult } from 'react-query';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useEffect, useState } from 'react';
-
-const getAbout = (axiosClient: AxiosInstance): UseQueryResult<AboutContent> => {
-  const queryKey = 'about';
-  const queryFn = axiosClient.get('/about')
-    .then(result => {
-      const { data } = result;
-      const { content, timestamp } = data as AboutResponse;
-
-      return { content, timestamp: DateTime.fromISO(timestamp) } as AboutContent;
-    });
-
-  return useQuery(queryKey, () => queryFn);
-};
-
-const getContent = (page: string, axiosClient: AxiosInstance, token: String): UseQueryResult<AboutContent> => {
-  const queryKey = `/pages/get-content/${page}`;
-  const queryFn = axiosClient
-    .get(`/pages/get-content/${page}`,
-      { headers: { Authorization: `Bearer ${token}` } })
-    .then(result => {
-      const { data } = result;
-      const { content, timestamp } = data as AboutResponse;
-
-      return { content, timestamp: DateTime.fromISO(timestamp) } as AboutContent;
-    });
-
-  return useQuery(queryKey, () => queryFn);
-};
+import { PageContent, PageResponse } from './response/Page';
+import { useQuery } from 'react-query';
+import { Auth0ContextInterface, useAuth0 } from '@auth0/auth0-react';
 
 const usePortfolioApi = () => {
-  const { getAccessTokenSilently } = useAuth0();
-  const [token, setToken] = useState('');
+  const auth = useAuth0();
   const axiosClient = axios.create({ baseURL: 'https://backend.local' });
 
-  useEffect(() => {
-    (async() => {
-      const token = await getAccessTokenSilently({
+  const getFn = (page: string, headers?: object) => axiosClient
+    .get(`${page}`,
+      { headers: { ...headers } })
+    .then(result => {
+      const { data } = result;
+      const { pageTitle, content, timestamp } = data as PageResponse;
+
+      return { title: pageTitle, content, timestamp: DateTime.fromISO(timestamp) } as PageContent;
+    }).catch(error => {
+      console.log('Error retrieving content', error.code);
+    }).finally(() => console.log('All done getting'));
+
+  const getPageContent = async(page: string, auth?: Auth0ContextInterface) => {
+    if (auth) {
+      return auth.getAccessTokenSilently({
         authorizationParams: {
           audience: 'https://backend.local',
-          scope: 'read:content'
+          scope: 'default:admin'
         }
+      }).then(async(token) => {
+        const headers = { Authorization: `Bearer ${token}` };
+        return await getFn(page, headers);
       });
-      setToken(token);
-    })();
-  }, [getAccessTokenSilently]);
+    } else {
+      return await getFn(page);
+    }
+  };
+
+  const postFn = (page: string, title: string, content: string, headers?: object) => axiosClient
+    .post('pages',
+      { route: page, pageTitle: title, content },
+      { headers: { ...headers } })
+    .catch(error => {
+      console.log('Error posting content', error.code);
+    }).finally(() => console.log('All done posting'));
+
+  const postPageContent = async(page: string, title: string, content: string, auth?: Auth0ContextInterface) => {
+    if (auth) {
+      console.log('Started!');
+      return auth.getAccessTokenSilently({
+        authorizationParams: {
+          audience: 'https://backend.local',
+          scope: 'default:admin'
+        }
+      }).then(async(token) => {
+        const headers = { Authorization: `Bearer ${token}` };
+        console.log('Page', page);
+        return await postFn(page, title, content, headers);
+      });
+    }
+  };
 
   return {
-    getAboutContent: () => getAbout(axiosClient),
-    getPageContent: (page: string) => getContent(page, axiosClient, token)
+    getPageContent: (page: string) => useQuery(page, () => getPageContent(page), {
+      refetchOnWindowFocus: false
+    }),
+    getSecuredPageContent: (page: string) => useQuery(page, () => getPageContent(page, auth), {
+      refetchOnWindowFocus: false
+    }),
+    postSecuredPageContent: (page: string, title: string, content: string) => postPageContent(page, title, content, auth)
   };
 };
 

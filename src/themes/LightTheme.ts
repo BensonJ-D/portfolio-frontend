@@ -4,7 +4,7 @@ const Theme = createTheme({
   palette: {
     mode: 'light',
     appbar: {
-      default: 'rgba(0,0,0,0.9)'
+      default: 'rgba(230,230,230,0.79)'
     }
   }
 });

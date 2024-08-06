@@ -9,13 +9,15 @@ const Footer = styled('div')(({ theme }) => ({
   color: theme.palette.text.secondary
 }));
 
-const ContentLastUpdatedTag = ({ timestamp }: { timestamp: DateTime }) => {
+const ContentLastUpdatedTag = ({ timestamp }: { timestamp?: DateTime }) => {
   const [lastUpdated, setLastUpdated] = useState<string>(
     'Less than a minute ago'
   );
 
   useEffect(() => {
-    setLastUpdated(summarisedTimeElapsed(timestamp));
+    timestamp
+      ? setLastUpdated(summarisedTimeElapsed(timestamp))
+      : setLastUpdated('unknown.');
   }, [timestamp]);
 
   return <Footer>Last updated: {lastUpdated}</Footer>;

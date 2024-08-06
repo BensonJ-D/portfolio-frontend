@@ -82,7 +82,7 @@ export class WebSocketManager {
 
   private connect = () => {
     const connect = (address: string) => {
-      this.webSocket = new WebSocket(address);
+      // this.webSocket = new WebSocket(address);
 
       if (this.webSocket) {
         this.webSocket.onopen = this.onOpen;

@@ -1,16 +1,19 @@
 import { DateTime } from 'luxon';
 
-export type AboutResponse = {
+export type PageResponse = {
+  pageTitle: string,
   content: string,
   timestamp: string
 }
 
-export type AboutContent = {
+export type PageContent = {
+  title: string,
   content: string,
   timestamp: DateTime
 }
 
-export const defaultAboutDetails: AboutContent = {
+export const defaultPageDetails: PageContent = {
+  title: '',
   content: '',
   timestamp: DateTime.now()
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material';
 import Theme from '../themes';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { WebSocketProvider } from '../utils/websockets/WebSocketProvider';
+// import { WebSocketProvider } from '../utils/websockets/WebSocketProvider';
 import { Auth0Provider } from '../providers/Auth0Provider';
 import { BrowserRouter } from 'react-router-dom';
 import { Content } from '../components/Content';
@@ -15,9 +15,9 @@ const App = () => {
       <BrowserRouter>
         <Auth0Provider>
           {/* <WebSocketProvider> */}
-            <ThemeProvider theme={Theme.Light}>
-              <Content />
-            </ThemeProvider>
+          <ThemeProvider theme={Theme.Light}>
+            <Content />
+          </ThemeProvider>
           {/* </WebSocketProvider> */}
         </Auth0Provider>
       </BrowserRouter>

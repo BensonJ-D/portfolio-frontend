@@ -1,0 +1,16 @@
+.parallax-container {
+    /*  this is where the magic happens:  */
+    /*background-image: url("https://images.unsplash.com/photo-1519120944692-1a8d8cfc107f?ixlib=rb-1.2.1&amp;amp;amp;amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;amp;amp;amp;auto=format&amp;amp;amp;amp;fit=crop&amp;amp;amp;amp;w=872&amp;amp;amp;amp;q=80");*/
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+
+    /* dimensions are important, ensure it is tall enough to scroll */
+    min-height: 100vh;
+
+    /* you are free to lay out the container items with flexbox or whatever means you wish */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

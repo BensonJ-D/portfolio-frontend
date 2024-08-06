@@ -20,8 +20,8 @@ module.exports = {
     server: {
       type: 'https',
       options: {
-        cert: '.\\ssl\\certificate.pem',
-        key: '.\\ssl\\private.key'
+        cert: './ssl/certificate.pem',
+        key: './ssl/private.key'
       }
     }
   },
