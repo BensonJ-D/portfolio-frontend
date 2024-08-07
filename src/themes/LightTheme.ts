@@ -2,13 +2,20 @@ import { createTheme } from '@mui/material/styles';
 
 const Theme = createTheme({
   palette: {
-    background: {
-      default: '#f6e0a8'
-    },
-    primary: {
-      main: '#ec0606'
+    mode: 'light',
+    appbar: {
+      default: 'rgba(230,230,230,0.79)'
     }
   }
 });
 
 export default Theme;
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    appbar: Palette['background'];
+  }
+  interface PaletteOptions {
+    appbar: PaletteOptions['background'];
+  }
+}

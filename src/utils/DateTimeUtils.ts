@@ -3,9 +3,6 @@ import { DateTime } from 'luxon';
 export const summarisedTimeElapsed = (then: DateTime): string => {
   const now = DateTime.now();
   const diff = now.diff(then, ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'], { conversionAccuracy: 'longterm' });
-  console.log('Then', then);
-  console.log('Now', now);
-  console.log('Diff', diff);
   const years = Math.abs(diff.years);
   const months = Math.abs(diff.months);
   const weeks = Math.abs(diff.weeks);

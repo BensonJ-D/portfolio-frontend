@@ -12,10 +12,18 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
+    hot: true,
     historyApiFallback: true,
     allowedHosts: 'all',
-    host: '0.0.0.0',
-    port: 3000
+    host: "0.0.0.0",
+    port: 3000,
+    server: {
+      type: 'https',
+      options: {
+        cert: './ssl/certificate.pem',
+        key: './ssl/private.key'
+      }
+    }
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -40,7 +48,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: ['style-loader', 'css-loader']
       }
     ]
